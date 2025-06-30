@@ -29,9 +29,9 @@ form.addEventListener('submit', (event) => {
     list.insertAdjacentElement('beforeend', item)
 
     obj[inputName] = inputDescrip
-   
+
     localStorage.setItem(LS_KEY, JSON.stringify(obj))
-console.log(obj);
+    console.log(obj);
 
     form.reset()
 })
@@ -44,24 +44,35 @@ list.addEventListener('click', (event) => {
 
 function loadFromStorage() {
     const getLS = localStorage.getItem(LS_KEY)
-    if (!getLS) { return }    
-    try { 
+    if (!getLS) { return }
+    try {
         const keys = Object.keys(JSON.parse(getLS))
         const values = Object.values(JSON.parse(getLS))
 
         const h3Els = [...document.querySelectorAll('h3')]
         const pEls = [...document.querySelectorAll('p')]
 
+        //проверка на длинну списка
+        if (keys.length > h3Els.length) {
+            list.innerHTML = ''
+            const markup = keys.map((item, index) => {
+                return `<li class='task-list-item'><button class="task-list-item-btn">Delete</button><h3>${item}</h3><p>${values[index]}</p></li>`
+            })
+            list.innerHTML = markup.join('')
+        }
+
+
         keys.forEach((key, index) => {
-            h3Els[index].textContent = key
+            return h3Els[index].textContent = key
         })
         values.forEach((value, index) => {
             pEls[index].textContent = value
         })
+
     }
     catch (error) {
         console.log(error.message);
-        
+
     }
 
 }
